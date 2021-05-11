@@ -14,7 +14,8 @@ class App extends Component {
     List: [
       {
         Id: uuidv4(),
-        Avatar: "https://bootdey.com/img/Content/avatar/avatar1.png",
+        Avatar: "67",
+        Gender: "men",
         Name: " Alexander Verdnam",
         Phone: "+1-800-600-9898",
         Email: "example@gmail.com",
@@ -22,7 +23,8 @@ class App extends Component {
       },
       {
         Id: uuidv4(),
-        Avatar: "https://bootdey.com/img/Content/avatar/avatar4.png",
+        Avatar: "5",
+        Gender: "men",
         Name: "Gerard Butler",
         Phone: "+1-800-600-4589",
         Email: "example@gmail.com",
@@ -30,7 +32,8 @@ class App extends Component {
       },
       {
         Id: uuidv4(),
-        Avatar: "https://bootdey.com/img/Content/avatar/avatar3.png",
+        Avatar: "79",
+        Gender: "women",
         Name: "Anna Lee",
         Phone: "+1-800-600-3658",
         Email: "example@gmail.com",
@@ -38,7 +41,8 @@ class App extends Component {
       },
       {
         Id: uuidv4(),
-        Avatar: "https://bootdey.com/img/Content/avatar/avatar2.png",
+        Avatar: "6",
+        Gender: "women",
         Name: "Olga Verdnam",
         Phone: "+1-800-600-3658",
         Email: "example@gmail.com",
@@ -46,29 +50,52 @@ class App extends Component {
       },
       {
         Id: uuidv4(),
-        Avatar: "https://bootdey.com/img/Content/avatar/avatar5.png",
-        Name: "Alexandera Verdnam",
-        Phone: "+1-800-600-2359",
-        Email: "example@gmail.com",
-        Status: "",
-      },
-      {
-        Id: uuidv4(),
-        Avatar: "https://bootdey.com/img/Content/avatar/avatar7.png",
+        Avatar: "77",
+        Gender: "men",
         Name: "John Verdnam",
         Phone: "+1-800-600-2135",
         Email: "example@gmail.com",
         Status: "none",
       },
     ],
+    StatusUser: ["Friend", "Work", "Private", "Family", "none"],
   };
-
+  // ---------------------------------------
+  onDelete = (Id) => {
+    const index = this.state.List.findIndex((elem) => elem.Id === Id);
+    let partOne = this.state.List.slice(0, index);
+    let partTwo = this.state.List.slice(index + 1);
+    let tmpList = [...partOne, ...partTwo];
+    this.setState(() => {
+      return {
+        List: tmpList,
+      };
+    });
+   };
+  // ---------------------------------------
+  onRemoveStatus = (Id) => {
+    const index = this.state.List.findIndex((elem) => elem.Id === Id);
+    let tmpList = this.state.List.map((item) => item);
+    let indexStatus = this.state.StatusUser.findIndex((elem) => elem === tmpList[index].Status);
+    this.state.StatusUser.length - 1 <= indexStatus ? (indexStatus = 0): indexStatus++;
+    tmpList[index].Status = this.state.StatusUser[indexStatus];
+    this.setState(() => {
+      return {
+        List: tmpList,
+      };
+    });
+  };
+  // ---------------------------------------
   render() {
     const { List } = this.state;
     return (
       <Fragment>
         <Header />
-        <ContactList ContactList={List} />
+        <ContactList
+          onDelete={this.onDelete}
+          onRemoveStatus={this.onRemoveStatus}
+          ContactList={List}
+        />
         <Footer />
       </Fragment>
     );

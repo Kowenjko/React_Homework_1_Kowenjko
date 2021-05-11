@@ -336,9 +336,9 @@ input {
 
 .contacts-list .unit .name .avatar {
   display: inline-block;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 74px;
+  height: 74px;
+  border-radius: 20px;
   margin: 0 16px 0 0;
   vertical-align: top;
 }
@@ -350,7 +350,7 @@ input {
   min-width: 75px;
   padding: 0 0 0 18px;
   color: #ffffff;
-  margin-left: 60px;
+  /* margin-left: 60px; */
 }
 
 .contacts-list .lab-warning {
@@ -381,4 +381,13 @@ input {
 
 .icon-edit {
   margin-left: 15px;
+}
+
+.icon-edit:hover,.lab:hover{
+  opacity: 0.5;
+  cursor: pointer;
+}
+.empty-list{
+  text-align: center;
+  color: #ccc;
 }

@@ -1,13 +1,23 @@
 import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ContactItem = (props) => {
-  console.log(props);
+  // console.log(props.onRemoveStatus);
   let status_class = "lab lab-none-status";
 
-  const { Avatar, Name, Phone, Email, Status } = props;
+  const {
+    Avatar,
+    Gender,
+    Name,
+    Phone,
+    Email,
+    Status,
+    onDelete,
+    onRemoveStatus,
+  } = props;
+  const image = `https://randomuser.me/portraits/${Gender}/${Avatar}.jpg`;
 
   switch (Status) {
     case "Friend":
@@ -35,10 +45,15 @@ const ContactItem = (props) => {
           <label htmlFor="cb2"></label>
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
-        <div>
-          <img src={Avatar} alt="image" className="avatar" /> {Name}
+        <div className="d-flex">
+          <img src={image} alt="image" className="avatar" />
+          <div>
+            <div> {Name}</div>
+            <div className={status_class} onClick={onRemoveStatus}>
+              {Status}
+            </div>
+          </div>
         </div>
-        <div className={status_class}>{Status}</div>
       </div>
       <div className="field phone">{Phone}</div>
       <div className="field email">{Email}</div>
@@ -50,6 +65,7 @@ const ContactItem = (props) => {
         />
         <FontAwesomeIcon
           className="text-danger icon-edit"
+          onClick={onDelete}
           icon={faTrash}
           size="lg"
         />
