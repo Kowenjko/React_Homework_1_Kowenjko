@@ -36,7 +36,7 @@ const ContactList = ({ ContactList, onDelete, onRemoveStatus }) => {
               <div className="field edit-contact text-secondary">Edit</div>
             </div>
             {/* <ContactItem /> */}
-            {ContactList.length > 0 ? ( item ) : (   <h2 className="empty-list">Contact list is not</h2>   )}
+            {ContactList.length > 0 ? (item) : (<h2 className="empty-list">Contact list is not</h2>)}
           </div>
         </div>
       </div>

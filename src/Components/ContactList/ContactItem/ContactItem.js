@@ -1,10 +1,10 @@
 import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faImage, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ContactItem = (props) => {
-  // console.log(props.onRemoveStatus);
+
   let status_class = "lab lab-none-status";
 
   const {
@@ -17,19 +17,20 @@ const ContactItem = (props) => {
     onDelete,
     onRemoveStatus,
   } = props;
-  const image = `https://randomuser.me/portraits/${Gender}/${Avatar}.jpg`;
 
-  switch (Status) {
-    case "Friend":
+  const imgAvatar = `https://randomuser.me/portraits/${Gender}/${Avatar}.jpg`;
+
+  switch (Status.toLowerCase()) {
+    case "friend":
       status_class = "lab lab-warning";
       break;
-    case "Family":
+    case "family":
       status_class = "lab lab-primary";
       break;
-    case "Private":
+    case "private":
       status_class = "lab lab-danger";
       break;
-    case "Work":
+    case "work":
       status_class = "lab lab-success";
       break;
     default:
@@ -46,7 +47,8 @@ const ContactItem = (props) => {
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
         <div className="d-flex">
-          <img src={image} alt="image" className="avatar" />
+          {Avatar && Gender ? <img src={imgAvatar} alt="imgAvatar" className=" avatar" /> : <FontAwesomeIcon className="avatar" icon={faImage} size="9x" />}
+          {/* <img src={imgAvatar} alt="imgAvatar" className="avatar" /> */}
           <div>
             <div> {Name}</div>
             <div className={status_class} onClick={onRemoveStatus}>

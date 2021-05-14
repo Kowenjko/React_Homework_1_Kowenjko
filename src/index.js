@@ -5,9 +5,21 @@ import ReactDOM from "react-dom";
 import "./index.css";
 
 //Component
+
+
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
 import ContactList from "./Components/ContactList/ContactList";
+import About from "./Components/About/About"
+import NotFound from "./Components/NotFound/NotFound"
+import AddContact from "./Components/AddContact/AddContact"
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+import Contact from "./Components/Contact/Contact";
 
 class App extends Component {
   state = {
@@ -55,10 +67,10 @@ class App extends Component {
         Name: "John Verdnam",
         Phone: "+1-800-600-2135",
         Email: "example@gmail.com",
-        Status: "none",
+        Status: "None",
       },
     ],
-    StatusUser: ["Friend", "Work", "Private", "Family", "none"],
+    StatusUser: ["Friend", "Work", "Private", "Family", "None"],
   };
   // ---------------------------------------
   onDelete = (Id) => {
@@ -71,13 +83,13 @@ class App extends Component {
         List: tmpList,
       };
     });
-   };
+  };
   // ---------------------------------------
   onRemoveStatus = (Id) => {
     const index = this.state.List.findIndex((elem) => elem.Id === Id);
     let tmpList = this.state.List.map((item) => item);
     let indexStatus = this.state.StatusUser.findIndex((elem) => elem === tmpList[index].Status);
-    this.state.StatusUser.length - 1 <= indexStatus ? (indexStatus = 0): indexStatus++;
+    this.state.StatusUser.length - 1 <= indexStatus ? (indexStatus = 0) : indexStatus++;
     tmpList[index].Status = this.state.StatusUser[indexStatus];
     this.setState(() => {
       return {
@@ -86,16 +98,29 @@ class App extends Component {
     });
   };
   // ---------------------------------------
+  onAddContact = (newContact) => {
+    let tmpList = this.state.List.slice();
+    tmpList.unshift(newContact);
+    console.log(tmpList);
+    this.setState({
+      List: tmpList
+    })
+  }
+  // ---------------------------------------
   render() {
     const { List } = this.state;
     return (
       <Fragment>
-        <Header />
-        <ContactList
-          onDelete={this.onDelete}
-          onRemoveStatus={this.onRemoveStatus}
-          ContactList={List}
-        />
+        <Router>
+          <Header />
+          <Switch>
+            <Route path="/" exact render={() => <ContactList onDelete={this.onDelete} onRemoveStatus={this.onRemoveStatus} ContactList={List} />} />
+            <Route path="/contact" exact component={Contact} />
+            <Route path="/about" exact component={About} />
+            <Route path="/add-contact" exact render={() => <AddContact onAddContact={this.onAddContact} />} />
+            <Route component={NotFound} />
+          </Switch>
+        </Router>
         <Footer />
       </Fragment>
     );

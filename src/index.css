@@ -1,8 +1,9 @@
 @import url(bootstrap.min.css);
-
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 /* --------------------------------- */
 body {
   /* margin-top: 20px; */
+  box-sizing: border-box;
   background: #2b3e50;
 }
 
@@ -352,24 +353,24 @@ input {
   color: #ffffff;
   /* margin-left: 60px; */
 }
-
-.contacts-list .lab-warning {
+/* --------------------------- */
+ .lab-warning {
   background: #f2a654;
 }
 
-.contacts-list .lab-success {
+ .lab-success {
   background: #46be8a;
 }
 
-.contacts-list .lab-danger {
+ .lab-danger {
   background: #ff69b4;
 }
 
-.contacts-list .lab-primary {
+ .lab-primary {
   background: #7266ba;
 }
 
-.contacts-list .lab-none-status {
+ .lab-none-status {
   background: #39bee8;
 }
 
@@ -390,4 +391,38 @@ input {
 .empty-list{
   text-align: center;
   color: #ccc;
+}
+/* -------------Cart-------------- */
+.card-container {
+  font-family: Montserrat, sans-serif;
+	/* background-color: #231E39; */
+	border-radius: 5px;
+	box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.75);
+	color: #B3B8CD;
+	padding-top: 30px;
+	position: relative;
+	width: 350px;
+  margin: 0 auto;
+	max-width: 100%;
+	text-align: left;
+  min-height: 100%;
+  /* margin-bottom: 20px; */
+}
+
+.card-container .pro {
+	color: #231E39;
+	/* background-color: #FEBB0B; */
+	border-radius: 3px;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 3px 7px;
+	position: absolute;
+	top: 30px;
+	left: 30px;
+}
+
+.card-container .round {
+	border: 1px solid #03BFCB;
+	border-radius: 50%;
+	padding: 7px;
 }
