@@ -1,33 +1,36 @@
 import React, { Component, Fragment } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import { Redirect } from "react-router-dom";
-//Component
-import CartUser from "../CartUser/CartUser";
 
-export default class AddContact extends Component {
+//Component
+import CartUserEdit from "../CartUser/CartUserEdit";
+
+export default class EditContact extends Component {
   state = {
     Avatar: "",
     Gender: "",
     Name: "",
     Phone: "",
     Email: "",
-    Status: "None",
+    Status: "",
     IsRedirect: false,
   };
-  // ----------Функція для вхід value-------------------------
+  // ----------Функція для всіх value-------------------------
   getContact = (e) => {
     const name = e.target.value;
     const nameContact = e.target.name;
     this.setState({ [nameContact]: name });
   };
+
   // -----------------------------------
   SendForm = (e) => {
     e.preventDefault();
     const { Avatar, Gender, Name, Phone, Email, Status } = this.state;
-    const { onAddContact } = this.props;
-    const newContact = {
-      Id: uuidv4(),
+    console.log("Id Props", this.props);
+    const { onEditContact } = this.props;
+    const { Id } = this.props.Contact;
+    const editContact = {
+      Id: Id,
       Avatar: parseInt(Avatar),
       Gender: Gender,
       Name: Name,
@@ -36,19 +39,28 @@ export default class AddContact extends Component {
       Status: Status,
     };
     this.setState({ IsRedirect: true });
-    onAddContact(newContact);
+    onEditContact(editContact);
   };
   // -----------------------------------
   render() {
     const { IsRedirect, Avatar } = this.state;
 
+    const { Name, Phone, Email } = this.props.Contact;
     if (IsRedirect) {
       return <Redirect to="/" />;
     }
     return (
       <Fragment>
         <div className="container">
-          <h2 className="text-center mt-4">Add new contact</h2>
+          <h2 className="text-center mt-4">
+            Edit contact -{" "}
+            <span className="text-primary">
+              {
+                Name
+                //   this.state.Name ? this.state.Name : Name // Виводимо якщо потрібно змінювати назву в h2
+              }
+            </span>
+          </h2>
           <div className="row">
             <form
               className="col-6 mb-3 card-container bg-secondary"
@@ -62,7 +74,8 @@ export default class AddContact extends Component {
                     type="text"
                     name="Name"
                     onChange={this.getContact}
-                    placeholder="Name"
+                    // placeholder={Name}
+                    placeholder={Name}
                     required
                   />
                 </fieldset>
@@ -76,7 +89,7 @@ export default class AddContact extends Component {
                     type="email"
                     name="Email"
                     onChange={this.getContact}
-                    placeholder="Email"
+                    placeholder={Email}
                     required
                   />
                 </fieldset>
@@ -86,7 +99,7 @@ export default class AddContact extends Component {
                 <label className="form-label">Phone</label>
                 <input
                   type="tel"
-                  placeholder="Phone"
+                  placeholder={Phone}
                   name="Phone"
                   onChange={this.getContact}
                   className="form-control"
@@ -173,7 +186,10 @@ export default class AddContact extends Component {
               </button>
             </form>
             <div className="col-6 mb-3">
-              <CartUser CartUser={this.state} />
+              <CartUserEdit
+                CartUser={this.state}
+                CartProps={this.props.Contact}
+              />
             </div>
           </div>
         </div>

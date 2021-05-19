@@ -1,10 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ContactItem = (props) => {
-
   let status_class = "lab lab-none-status";
 
   const {
@@ -16,6 +16,7 @@ const ContactItem = (props) => {
     Status,
     onDelete,
     onRemoveStatus,
+    onEdit,
   } = props;
 
   const imgAvatar = `https://randomuser.me/portraits/${Gender}/${Avatar}.jpg`;
@@ -47,7 +48,11 @@ const ContactItem = (props) => {
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
         <div className="d-flex">
-          {Avatar && Gender ? <img src={imgAvatar} alt="imgAvatar" className=" avatar" /> : <FontAwesomeIcon className="avatar" icon={faImage} size="9x" />}
+          {Avatar && Gender ? (
+            <img src={imgAvatar} alt="imgAvatar" className=" avatar" />
+          ) : (
+            <FontAwesomeIcon className="avatar" icon={faImage} size="9x" />
+          )}
           {/* <img src={imgAvatar} alt="imgAvatar" className="avatar" /> */}
           <div>
             <div> {Name}</div>
@@ -60,11 +65,14 @@ const ContactItem = (props) => {
       <div className="field phone">{Phone}</div>
       <div className="field email">{Email}</div>
       <div className="field edit-contact">
-        <FontAwesomeIcon
-          className="text-success icon-edit"
-          icon={faEdit}
-          size="lg"
-        />
+        <Link to="/edit-contacts">
+          <FontAwesomeIcon
+            className="text-success icon-edit"
+            onClick={onEdit}
+            icon={faEdit}
+            size="lg"
+          />
+        </Link>
         <FontAwesomeIcon
           className="text-danger icon-edit"
           onClick={onDelete}
