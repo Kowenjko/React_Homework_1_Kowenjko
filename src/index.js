@@ -1,6 +1,5 @@
 import React, { Fragment, Component } from "react";
 
-// import { v4 as uuidv4 } from "uuid";
 import ReactDOM from "react-dom";
 import "./index.css";
 
@@ -21,7 +20,6 @@ import { updateContacts, getAllContacts } from "./Services/api-service";
 class App extends Component {
   componentDidMount() {
     getAllContacts().then((data) => {
-      // console.log("data=", data);
       if (data === null) {
         this.setState({ List: [] });
       } else {
@@ -31,31 +29,36 @@ class App extends Component {
       }
     });
   }
-  // componentDidMount() {
-  //   console.log("componentDidMount");
-  // }
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log("shouldComponentUpdate");
-  //   console.log("nextProps", nextProps);
-  //   console.log("nextState", nextState);
-  //   // if (nextState.List.length === 2) {
-  //   //   return false;
-  //   // }
-  //   return true;
-  // }
-  // componentDidUpdate() {
-  //   console.log("componentDidUpdate");
-  // }
-
-  // componentWillUnmount() {
-  //   console.log("componentWillUnmount");
-  //   getAllContacts();
-  // }
-
   state = {
     List: [],
     StatusUser: ["Friend", "Work", "Private", "Family", "None"],
     CurrentContact: null,
+    findContact: "",
+    nameSearch: "Name",
+  };
+  // --------------Зчитуємо з inputa value-------------------
+  searchName = (event) => {
+    let searchName = event.target.value;
+    this.setState({
+      findContact: searchName,
+    });
+  };
+  // --------------Виборпошуку по типу-------------------------
+  selectSearch = (event) => {
+    let name = event.target.value;
+    this.setState({
+      nameSearch: name,
+    });
+  };
+  // --------------Пошук контакта в state по key----------------
+  onShowContact = (items, searchValue) => {
+    const { nameSearch } = this.state;
+    if (searchValue.length === 0) {
+      return items;
+    }
+    return items.filter((item) => {
+      return item[nameSearch].toLowerCase().indexOf(searchValue.toLowerCase()) > -1;
+    });
   };
   // ----------Видалення контакту-----------------------------
   onDelete = (Id) => {
@@ -71,7 +74,6 @@ class App extends Component {
   // ------------Копіювання контакту для редагування---------------------------
   onEdit = (Id) => {
     const index = this.state.List.findIndex((elem) => elem.Id === Id);
-    // console.log(index);
     this.setState({
       CurrentContact: this.state.List[index],
     });
@@ -79,9 +81,7 @@ class App extends Component {
   // -----------Редагування контакту----------------------------
   onEditContact = (editContact) => {
     let tmpList = this.state.List.slice();
-    const index = this.state.List.findIndex(
-      (elem) => elem.Id === editContact.Id
-    );
+    const index = this.state.List.findIndex((elem) => elem.Id === editContact.Id);
     tmpList[index] = editContact;
     this.setState({
       List: tmpList,
@@ -93,14 +93,9 @@ class App extends Component {
     const index = this.state.List.findIndex((elem) => elem.Id === Id);
     let tmpList = this.state.List.slice();
 
-    let indexStatus = this.state.StatusUser.findIndex(
-      (elem) => elem === tmpList[index].Status
-    );
-    this.state.StatusUser.length - 1 <= indexStatus
-      ? (indexStatus = 0)
-      : indexStatus++;
+    let indexStatus = this.state.StatusUser.findIndex((elem) => elem === tmpList[index].Status);
+    this.state.StatusUser.length - 1 <= indexStatus ? (indexStatus = 0) : indexStatus++;
     tmpList[index].Status = this.state.StatusUser[indexStatus];
-
     this.setState({
       List: tmpList,
     });
@@ -118,39 +113,36 @@ class App extends Component {
 
   // --------------Відрисовка-------------------------
   render() {
-    const { List, CurrentContact } = this.state;
+    const showContacts = this.onShowContact(this.state.List, this.state.findContact);
+    const { CurrentContact } = this.state;
+    console.log(this.state.nameSearch);
     return (
       <Fragment>
         <Router>
-          <Header />
+          <Header searchName={this.searchName} selectSearch={this.selectSearch} />
           <Switch>
             <Route
-              path="/"
+              path='/'
               exact
               render={() => (
                 <ContactList
+                  ContactList={showContacts}
                   onDelete={this.onDelete}
                   onEdit={this.onEdit}
                   onRemoveStatus={this.onRemoveStatus}
-                  ContactList={List}
                 />
               )}
             />
-            <Route path="/contact" exact component={Contact} />
-            <Route path="/about" exact component={About} />
+            <Route path='/contact' component={Contact} />
+            <Route path='/about' component={About} />
             <Route
-              path="/add-contact"
-              exact
+              path='/add-contact'
               render={() => <AddContact onAddContact={this.onAddContact} />}
             />
             <Route
-              path="/edit-contacts"
-              exact
+              path='/edit-contacts'
               render={() => (
-                <EditContact
-                  Contact={CurrentContact}
-                  onEditContact={this.onEditContact}
-                />
+                <EditContact Contact={CurrentContact} onEditContact={this.onEditContact} />
               )}
             />
             <Route component={NotFound} />
