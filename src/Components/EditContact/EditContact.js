@@ -43,12 +43,12 @@ export default class EditContact extends Component {
   };
   // -----------------------------------
   render() {
-    const { IsRedirect, Avatar } = this.state;
+    const { IsRedirect, Avatar, Name, Email, Phone, Status } = this.state;
 
     if (IsRedirect || this.props.Contact === null) {
       return <Redirect to='/' />;
     }
-    const { Name, Phone, Email } = this.props.Contact;
+    const { Contact } = this.props;
 
     return (
       <Fragment>
@@ -57,8 +57,8 @@ export default class EditContact extends Component {
             Edit contact -{" "}
             <span className='text-primary'>
               {
-                Name
-                //   this.state.Name ? this.state.Name : Name // Виводимо якщо потрібно змінювати назву в h2
+                Contact.Name
+                //   this.state.Name ? this.state.Name : Contact.Name // Виводимо якщо потрібно змінювати назву в h2
               }
             </span>
           </h2>
@@ -71,9 +71,10 @@ export default class EditContact extends Component {
                     className='form-control'
                     type='text'
                     name='Name'
+                    value={Name ? Name : Contact.Name}
                     onChange={this.getContact}
                     // placeholder={Name}
-                    placeholder={Name}
+                    // placeholder={Name}
                     required
                   />
                 </fieldset>
@@ -87,7 +88,8 @@ export default class EditContact extends Component {
                     type='email'
                     name='Email'
                     onChange={this.getContact}
-                    placeholder={Email}
+                    value={Email ? Email : Contact.Email}
+                    // placeholder={Contact.Email}
                     required
                   />
                 </fieldset>
@@ -97,7 +99,8 @@ export default class EditContact extends Component {
                 <label className='form-label'>Phone</label>
                 <input
                   type='tel'
-                  placeholder={Phone}
+                  // placeholder={Contact.Phone}
+                  value={Phone ? Phone : Contact.Phone}
                   name='Phone'
                   onChange={this.getContact}
                   className='form-control'
@@ -112,12 +115,10 @@ export default class EditContact extends Component {
                     className=' custom-select'
                     id='exampleSelect1'
                     name='Status'
+                    value={Status ? Status : Contact.Status}
                     onChange={this.getContact}
                     required
                   >
-                    <option value disabled>
-                      Select...
-                    </option>
                     <option value='Friend'>Friend</option>
                     <option value='Work'> Work</option>
                     <option value='Private'>Private</option>
@@ -126,7 +127,9 @@ export default class EditContact extends Component {
                   </select>
                 </div>
                 <fieldset className='form-group col-6'>
-                  <label className='form-label  '>Gender</label>
+                  <label className='form-label  '>
+                    Gender- <strong className='text-warning'>Necessarily</strong>{" "}
+                  </label>
                   <div className='d-flex'>
                     <div className='custom-control custom-radio mt-2'>
                       <input
@@ -162,12 +165,13 @@ export default class EditContact extends Component {
                 {/* <label className="form-label" >Avatar</label>
                                 <input type="number" min="0" max="99" name="Avatar" className="form-control" onChange={this.getContact} placeholder='Avatar' /> */}
 
-                <label htmlFor='customRange1'>Avatar - {Avatar}</label>
+                <label htmlFor='customRange1'>Avatar - {Avatar ? Avatar : Contact.Avatar}</label>
                 <input
                   type='range'
                   max='99'
                   className='custom-range'
                   name='Avatar'
+                  value={Avatar ? Avatar : Contact.Avatar}
                   id='customRange1'
                   onChange={this.getContact}
                 />
