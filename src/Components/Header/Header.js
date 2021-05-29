@@ -47,7 +47,7 @@ const Header = ({ searchName, selectSearch }) => (
               </Link>
             </li>
           </ul>
-          <Search searchName={searchName} selectSearch={selectSearch} />
+          <Search />
         </div>
       </nav>
     </div>

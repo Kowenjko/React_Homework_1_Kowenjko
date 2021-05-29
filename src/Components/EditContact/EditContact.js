@@ -1,11 +1,16 @@
+// React
 import React, { Component, Fragment } from "react";
-
 import { Redirect } from "react-router-dom";
+//Redux
+import { connect } from "react-redux";
+import { onAddContact } from "../../Actions/ContactListActions";
+//Service
+import { updateContacts } from "../../Services/api-service";
 
 //Component
 import CartUserEdit from "../CartUser/CartUserEdit";
 
-export default class EditContact extends Component {
+export class EditContact extends Component {
   state = {
     id: 0,
     Avatar: "",
@@ -16,7 +21,8 @@ export default class EditContact extends Component {
     Status: "",
     IsRedirect: false,
   };
-  // ----------Функція для всіх value-------------------------
+
+  // ----------Функція для всіх value--------------------
   getContact = (e) => {
     const name = e.target.value;
     const nameContact = e.target.name;
@@ -26,29 +32,32 @@ export default class EditContact extends Component {
   SendForm = (e) => {
     e.preventDefault();
     const { Avatar, Gender, Name, Phone, Email, Status } = this.state;
-    // console.log("Id Props", this.props);
-    const { onEditContact } = this.props;
-    const { Id } = this.props.Contact;
+    const { CurrentContact, onAddContact } = this.props;
     const editContact = {
-      Id: Id,
-      Avatar: parseInt(Avatar),
-      Gender: Gender,
-      Name: Name,
-      Phone: Phone,
-      Email: Email,
-      Status: Status,
+      Id: CurrentContact.Id,
+      Avatar: parseInt(Avatar) ? parseInt(Avatar) : CurrentContact.Avatar,
+      Gender: Gender ? Gender : CurrentContact.Gender,
+      Name: Name ? Name : CurrentContact.Name,
+      Phone: Phone ? Phone : CurrentContact.Phone,
+      Email: Email ? Email : CurrentContact.Email,
+      Status: Status ? Status : CurrentContact.Status,
     };
+
+    const { List } = this.props;
+    let tmpList = List.slice();
+    const index = List.findIndex((elem) => elem.Id === editContact.Id);
+    tmpList[index] = editContact;
+    onAddContact(tmpList);
+    updateContacts(tmpList);
     this.setState({ IsRedirect: true });
-    onEditContact(editContact);
   };
   // -----------------------------------
   render() {
     const { IsRedirect, Avatar, Name, Email, Phone, Status } = this.state;
-
-    if (IsRedirect || this.props.Contact === null) {
+    const { CurrentContact } = this.props;
+    if (IsRedirect || this.props.CurrentContact === null) {
       return <Redirect to='/' />;
     }
-    const { Contact } = this.props;
 
     return (
       <Fragment>
@@ -57,7 +66,7 @@ export default class EditContact extends Component {
             Edit contact -{" "}
             <span className='text-primary'>
               {
-                Contact.Name
+                CurrentContact.Name
                 //   this.state.Name ? this.state.Name : Contact.Name // Виводимо якщо потрібно змінювати назву в h2
               }
             </span>
@@ -71,10 +80,8 @@ export default class EditContact extends Component {
                     className='form-control'
                     type='text'
                     name='Name'
-                    value={Name ? Name : Contact.Name}
+                    value={Name ? Name : CurrentContact.Name}
                     onChange={this.getContact}
-                    // placeholder={Name}
-                    // placeholder={Name}
                     required
                   />
                 </fieldset>
@@ -88,7 +95,7 @@ export default class EditContact extends Component {
                     type='email'
                     name='Email'
                     onChange={this.getContact}
-                    value={Email ? Email : Contact.Email}
+                    value={Email ? Email : CurrentContact.Email}
                     // placeholder={Contact.Email}
                     required
                   />
@@ -100,7 +107,7 @@ export default class EditContact extends Component {
                 <input
                   type='tel'
                   // placeholder={Contact.Phone}
-                  value={Phone ? Phone : Contact.Phone}
+                  value={Phone ? Phone : CurrentContact.Phone}
                   name='Phone'
                   onChange={this.getContact}
                   className='form-control'
@@ -115,7 +122,7 @@ export default class EditContact extends Component {
                     className=' custom-select'
                     id='exampleSelect1'
                     name='Status'
-                    value={Status ? Status : Contact.Status}
+                    value={Status ? Status : CurrentContact.Status}
                     onChange={this.getContact}
                     required
                   >
@@ -165,13 +172,15 @@ export default class EditContact extends Component {
                 {/* <label className="form-label" >Avatar</label>
                                 <input type="number" min="0" max="99" name="Avatar" className="form-control" onChange={this.getContact} placeholder='Avatar' /> */}
 
-                <label htmlFor='customRange1'>Avatar - {Avatar ? Avatar : Contact.Avatar}</label>
+                <label htmlFor='customRange1'>
+                  Avatar - {Avatar ? Avatar : CurrentContact.Avatar}
+                </label>
                 <input
                   type='range'
                   max='99'
                   className='custom-range'
                   name='Avatar'
-                  value={Avatar ? Avatar : Contact.Avatar}
+                  value={Avatar ? Avatar : CurrentContact.Avatar}
                   id='customRange1'
                   onChange={this.getContact}
                 />
@@ -182,7 +191,7 @@ export default class EditContact extends Component {
               </button>
             </form>
             <div className='col-6 mb-3'>
-              <CartUserEdit CartUser={this.state} CartProps={this.props.Contact} />
+              <CartUserEdit CartUser={this.state} CartProps={this.props.CurrentContact} />
             </div>
           </div>
         </div>
@@ -190,3 +199,10 @@ export default class EditContact extends Component {
     );
   }
 }
+const mapStateToProps = ({ ContactListReducer }) => {
+  const { CurrentContact, List } = ContactListReducer;
+  return { CurrentContact, List };
+};
+
+const mapDispatchToProps = { onAddContact };
+export default connect(mapStateToProps, mapDispatchToProps)(EditContact);

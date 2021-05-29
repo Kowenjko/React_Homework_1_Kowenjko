@@ -1,11 +1,18 @@
+// React
 import React, { Component, Fragment } from "react";
+// Id random
 import { v4 as uuidv4 } from "uuid";
-
+//Redax
+import { connect } from "react-redux";
+//Router
 import { Redirect } from "react-router-dom";
 //Component
 import CartUser from "../CartUser/CartUser";
-
-export default class AddContact extends Component {
+//Service
+import { updateContacts } from "../../Services/api-service";
+//Action
+import { onAddContact } from "../../Actions/ContactListActions";
+export class AddContact extends Component {
   state = {
     Avatar: "",
     Gender: "",
@@ -13,9 +20,9 @@ export default class AddContact extends Component {
     Phone: "",
     Email: "",
     Status: "None",
-    IsRedirect: false,
   };
-  // ----------Функція для вхід value-------------------------
+
+  // ----------Функція для всіх value-------------------------
   getContact = (e) => {
     const name = e.target.value;
     const nameContact = e.target.name;
@@ -25,7 +32,7 @@ export default class AddContact extends Component {
   SendForm = (e) => {
     e.preventDefault();
     const { Avatar, Gender, Name, Phone, Email, Status } = this.state;
-    const { onAddContact } = this.props;
+    const { onAddContact, List } = this.props;
     const newContact = {
       Id: uuidv4(),
       Avatar: parseInt(Avatar),
@@ -34,14 +41,19 @@ export default class AddContact extends Component {
       Phone: Phone,
       Email: Email,
       Status: Status,
+      IsRedirect: false,
     };
+    let tmpList = List.slice();
+    tmpList.unshift(newContact);
+    // console.log("tmpList", tmpList);
+    onAddContact(tmpList);
+    updateContacts(tmpList);
     this.setState({ IsRedirect: true });
-    onAddContact(newContact);
   };
   // -----------------------------------
   render() {
-    const { IsRedirect, Avatar } = this.state;
-
+    console.log("props", this.props);
+    const { Avatar, IsRedirect } = this.state;
     if (IsRedirect) {
       return <Redirect to='/' />;
     }
@@ -64,7 +76,6 @@ export default class AddContact extends Component {
                   />
                 </fieldset>
               </div>
-
               <div className='form-group'>
                 <fieldset>
                   <label className='form-label'>Email</label>
@@ -78,7 +89,6 @@ export default class AddContact extends Component {
                   />
                 </fieldset>
               </div>
-
               <div className='form-group has-success'>
                 <label className='form-label'>Phone</label>
                 <input
@@ -90,7 +100,6 @@ export default class AddContact extends Component {
                   required
                 />
               </div>
-
               <div className='row'>
                 <div className='form-group col-6'>
                   <label className='form-label'>Status</label>
@@ -158,7 +167,6 @@ export default class AddContact extends Component {
                   onChange={this.getContact}
                 />
               </fieldset>
-
               <button type='submit' className='btn  bg-primary w-100 mb-2'>
                 Save
               </button>
@@ -172,3 +180,14 @@ export default class AddContact extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ ContactListReducer }) => {
+  const { List, IsRedirect } = ContactListReducer;
+
+  console.log("ContactListReducer=", ContactListReducer);
+  return { List, IsRedirect };
+};
+
+const mapDispatchToProps = { onAddContact };
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddContact);
